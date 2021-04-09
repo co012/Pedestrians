@@ -9,11 +9,13 @@ public class Point {
 	public int type;
 	public int staticField;
 	public boolean isPedestrian;
+	public boolean blocked;
 
 	public Point() {
 		type=0;
 		staticField = 100000;
 		neighbors= new ArrayList<Point>();
+		blocked = false;
 	}
 	
 	public void clear() {
@@ -35,7 +37,7 @@ public class Point {
 	}
 	
 	public void move(){
-		if(!isPedestrian) return;
+		if(!isPedestrian || blocked) return;
 
 		Optional<Point> nextFieldOptional = neighbors.stream()
 				.filter(p -> !p.isPedestrian)
@@ -45,8 +47,10 @@ public class Point {
 
 		Point nextField = nextFieldOptional.get();
 		this.isPedestrian = false;
-		nextField.isPedestrian = true;
+		if(nextField.type != 2)
+			nextField.isPedestrian = true;
 		//TODO: Make it possible to stay in place
+		nextField.blocked = true;
 	}
 
 	public void addNeighbor(Point nei) {
