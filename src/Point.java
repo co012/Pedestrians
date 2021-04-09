@@ -46,10 +46,11 @@ public class Point {
 		if(nextFieldOptional.isEmpty()) return;
 
 		Point nextField = nextFieldOptional.get();
+		if(nextField.staticField > this.staticField) nextField = this;
+
 		this.isPedestrian = false;
 		if(nextField.type != 2)
 			nextField.isPedestrian = true;
-		//TODO: Make it possible to stay in place
 		nextField.blocked = true;
 	}
 
