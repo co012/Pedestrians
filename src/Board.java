@@ -4,7 +4,6 @@ import java.awt.Insets;
 import java.awt.event.ComponentEvent;
 import java.awt.event.ComponentListener;
 import java.awt.event.MouseEvent;
-import java.util.ArrayList;
 import java.util.LinkedList;
 
 import javax.swing.JComponent;
@@ -16,7 +15,7 @@ public class Board extends JComponent implements MouseInputListener, ComponentLi
 	private int size = 10;
 	public int editType=0;
 
-	private final static boolean NEUMANN_NEIGHBORHOOD = false;
+	private final static boolean MOORE_NEIGHBORHOOD = false;
 
 	public Board(int length, int height) {
 		addMouseListener(this);
@@ -61,7 +60,7 @@ public class Board extends JComponent implements MouseInputListener, ComponentLi
 				points[x][y].addNeighbor(points[x-1][y]);
 				points[x][y].addNeighbor(points[x][y+1]);
 				points[x][y].addNeighbor(points[x][y-1]);
-				if(NEUMANN_NEIGHBORHOOD){
+				if(MOORE_NEIGHBORHOOD){
 					points[x][y].addNeighbor(points[x+1][y+1]);
 					points[x][y].addNeighbor(points[x-1][y+1]);
 					points[x][y].addNeighbor(points[x+1][y-1]);
