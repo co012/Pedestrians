@@ -5,6 +5,7 @@ import java.awt.event.ComponentEvent;
 import java.awt.event.ComponentListener;
 import java.awt.event.MouseEvent;
 import java.util.ArrayList;
+import java.util.LinkedList;
 
 import javax.swing.JComponent;
 import javax.swing.event.MouseInputListener;
@@ -65,6 +66,24 @@ public class Board extends JComponent implements MouseInputListener, ComponentLi
 	}
 	
 	private void calculateField(){
+		LinkedList<Point> toCheck = new LinkedList<>();
+
+		for(Point[] line:points){
+			for(Point point:line){
+				if(point.type != 2)continue;
+
+				point.staticField = 0;
+				toCheck.addAll(point.neighbors);
+			}
+		}
+
+		while (!toCheck.isEmpty()){
+			Point point = toCheck.pop();
+			if(point.calcStaticField()){
+				toCheck.addAll(point.neighbors);
+			}
+		}
+
 	}
 
 	protected void paintComponent(Graphics g) {

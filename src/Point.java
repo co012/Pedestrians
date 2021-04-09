@@ -1,4 +1,6 @@
 import java.util.ArrayList;
+import java.util.Comparator;
+import java.util.Optional;
 
 public class Point {
 
@@ -20,7 +22,16 @@ public class Point {
 	}
 
 	public boolean calcStaticField() {
-		return false;
+		if(neighbors.isEmpty())return false;
+
+		Point smallestStaticFieldPoint = neighbors.stream()
+				.min(Comparator.comparingInt(p -> p.staticField))
+				.orElseThrow();
+
+		if(smallestStaticFieldPoint.staticField + 1 >= this.staticField) return false;
+
+		this.staticField = smallestStaticFieldPoint.staticField + 1;
+		return true;
 	}
 	
 	public void move(){
