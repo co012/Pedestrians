@@ -15,6 +15,8 @@ public class Board extends JComponent implements MouseInputListener, ComponentLi
 	private int size = 10;
 	public int editType=0;
 
+	private final static boolean NEUMANN_NEIGHBORHOOD = false;
+
 	public Board(int length, int height) {
 		addMouseListener(this);
 		addComponentListener(this);
@@ -47,7 +49,17 @@ public class Board extends JComponent implements MouseInputListener, ComponentLi
 				points[x][y] = new Point();
 
 		for (int x = 1; x < points.length-1; ++x) {
-			for (int y = 1; y < points[x].length-1; ++y) {			
+			for (int y = 1; y < points[x].length-1; ++y) {
+				points[x][y].addNeighbor(points[x+1][y]);
+				points[x][y].addNeighbor(points[x-1][y]);
+				points[x][y].addNeighbor(points[x][y+1]);
+				points[x][y].addNeighbor(points[x][y-1]);
+				if(NEUMANN_NEIGHBORHOOD){
+					points[x][y].addNeighbor(points[x+1][y+1]);
+					points[x][y].addNeighbor(points[x-1][y+1]);
+					points[x][y].addNeighbor(points[x+1][y-1]);
+					points[x][y].addNeighbor(points[x-1][y-1]);
+				}
 			}
 		}	
 	}
