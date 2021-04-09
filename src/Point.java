@@ -35,9 +35,22 @@ public class Point {
 	}
 	
 	public void move(){
+		if(!isPedestrian) return;
+
+		Optional<Point> nextFieldOptional = neighbors.stream()
+				.filter(p -> !p.isPedestrian)
+				.min(Comparator.comparingInt(p -> p.staticField));
+
+		if(nextFieldOptional.isEmpty()) return;
+
+		Point nextField = nextFieldOptional.get();
+		this.isPedestrian = false;
+		nextField.isPedestrian = true;
+		//TODO: Make it possible to stay in place
 	}
 
 	public void addNeighbor(Point nei) {
 		neighbors.add(nei);
+
 	}
 }
