@@ -80,10 +80,12 @@ public class Board extends JComponent implements MouseInputListener, ComponentLi
 
 
 		LinkedList<Vector2d> exits = new LinkedList<>();
+		LinkedList<Vector2d> walls = new LinkedList<>();
 
 		for (int x = 1; x < points.length-1; ++x) {
 			for (int y = 1; y < points[x].length-1; ++y) {
 				if(points[x][y].type == 2) exits.add(new Vector2d(x,y));
+				else if (points[x][y].type == 1) walls.add(new Vector2d(x,y));
 			}
 		}
 
@@ -92,6 +94,9 @@ public class Board extends JComponent implements MouseInputListener, ComponentLi
 				float val = 0;
 				for(Vector2d v : exits){
 					val+= -1/(v.calculateDistanceTo(x,y) + Float.MIN_VALUE);
+				}
+				for(Vector2d v : walls){
+					val += 0.1/(v.calculateDistanceTo(x,y) + Float.MIN_VALUE);
 				}
 				points[x][y].setStaticField(val);
 			}
