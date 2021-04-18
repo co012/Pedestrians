@@ -7,7 +7,7 @@ public class Point {
 	public ArrayList<Point> neighbors;
 	public static Integer []types ={0,1,2,3};
 	public int type;
-	public int staticField;
+	public float staticField;
 	public boolean isPedestrian;
 	public boolean blocked;
 
@@ -23,17 +23,8 @@ public class Point {
 		
 	}
 
-	public boolean calcStaticField() {
-		if(neighbors.isEmpty())return false;
-
-		Point smallestStaticFieldPoint = neighbors.stream()
-				.min(Comparator.comparingInt(p -> p.staticField))
-				.orElseThrow();
-
-		if(smallestStaticFieldPoint.staticField + 1 >= this.staticField) return false;
-
-		this.staticField = smallestStaticFieldPoint.staticField + 1;
-		return true;
+	public void setStaticField(float val) {
+		staticField = val;
 	}
 	
 	public void move(){
@@ -41,7 +32,7 @@ public class Point {
 
 		Optional<Point> nextFieldOptional = neighbors.stream()
 				.filter(p -> !p.isPedestrian)
-				.min(Comparator.comparingInt(p -> p.staticField));
+				.min(Comparator.comparingDouble(p -> p.staticField));
 
 		if(nextFieldOptional.isEmpty()) return;
 

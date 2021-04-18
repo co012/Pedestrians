@@ -7,6 +7,7 @@ import java.awt.event.MouseEvent;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.LinkedList;
+import java.util.Vector;
 
 import javax.swing.JComponent;
 import javax.swing.event.MouseInputListener;
@@ -18,7 +19,7 @@ public class Board extends JComponent implements MouseInputListener, ComponentLi
 	private int size = 10;
 	public int editType=0;
 
-	private final static boolean MOORE_NEIGHBORHOOD = false;
+	private final static boolean MOORE_NEIGHBORHOOD = true;
 
 	public Board(int length, int height) {
 		addMouseListener(this);
@@ -76,23 +77,27 @@ public class Board extends JComponent implements MouseInputListener, ComponentLi
 	}
 	
 	private void calculateField(){
-		LinkedList<Point> toCheck = new LinkedList<>();
 
-		for(Point[] line:points){
-			for(Point point:line){
-				if(point.type != 2)continue;
 
-				point.staticField = 0;
-				toCheck.addAll(point.neighbors);
+		LinkedList<Vector2d> exits = new LinkedList<>();
+
+		for (int x = 1; x < points.length-1; ++x) {
+			for (int y = 1; y < points[x].length-1; ++y) {
+				if(points[x][y].type == 2) exits.add(new Vector2d(x,y));
 			}
 		}
 
-		while (!toCheck.isEmpty()){
-			Point point = toCheck.pop();
-			if(point.calcStaticField()){
-				toCheck.addAll(point.neighbors);
+		for (int x = 1; x < points.length-1; ++x) {
+			for (int y = 1; y < points[x].length-1; ++y) {
+				float val = 0;
+				for(Vector2d v : exits){
+					val+= -1/(v.calculateDistanceTo(x,y) + Float.MIN_VALUE);
+				}
+				points[x][y].setStaticField(val);
 			}
 		}
+
+
 
 	}
 
@@ -128,7 +133,7 @@ public class Board extends JComponent implements MouseInputListener, ComponentLi
 			for (y = 1; y < points[x].length-1; ++y) {
 				if(points[x][y].type==0){
 					float staticField = points[x][y].staticField;
-					float intensity = staticField/100;
+					float intensity = (float) (Math.tanh(staticField) + 1)/2;
 					if (intensity > 1.0) {
 						intensity = 1.0f;
 					}
