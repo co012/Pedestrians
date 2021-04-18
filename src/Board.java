@@ -4,6 +4,8 @@ import java.awt.Insets;
 import java.awt.event.ComponentEvent;
 import java.awt.event.ComponentListener;
 import java.awt.event.MouseEvent;
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.LinkedList;
 
 import javax.swing.JComponent;
@@ -12,6 +14,7 @@ import javax.swing.event.MouseInputListener;
 public class Board extends JComponent implements MouseInputListener, ComponentListener {
 	private static final long serialVersionUID = 1L;
 	private Point[][] points;
+	private ArrayList<Point> movablePointsArrayList;
 	private int size = 10;
 	public int editType=0;
 
@@ -26,15 +29,15 @@ public class Board extends JComponent implements MouseInputListener, ComponentLi
 	}
 
 	public void iteration() {
-		for(Point[] line:points){
-			for(Point point:line){
-				point.blocked = false;
-			}
+
+		for(Point point:movablePointsArrayList){
+			point.blocked = false;
 		}
 
-		for (int x = 1; x < points.length - 1; ++x)
-			for (int y = 1; y < points[x].length - 1; ++y)
-				points[x][y].move();
+		Collections.shuffle(movablePointsArrayList);
+		for(Point point: movablePointsArrayList){
+			point.move();
+		}
 		this.repaint();
 	}
 
@@ -49,6 +52,7 @@ public class Board extends JComponent implements MouseInputListener, ComponentLi
 
 	private void initialize(int length, int height) {
 		points = new Point[length][height];
+		movablePointsArrayList = new ArrayList<>((length - 1) * (height - 1));
 
 		for (int x = 0; x < points.length; ++x)
 			for (int y = 0; y < points[x].length; ++y)
@@ -56,6 +60,7 @@ public class Board extends JComponent implements MouseInputListener, ComponentLi
 
 		for (int x = 1; x < points.length-1; ++x) {
 			for (int y = 1; y < points[x].length-1; ++y) {
+				movablePointsArrayList.add(points[x][y]);
 				points[x][y].addNeighbor(points[x+1][y]);
 				points[x][y].addNeighbor(points[x-1][y]);
 				points[x][y].addNeighbor(points[x][y+1]);
